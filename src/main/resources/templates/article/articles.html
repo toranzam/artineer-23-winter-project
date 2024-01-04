@@ -37,6 +37,12 @@
                 <td>김민성</td>
                 <td>2001.03.14</td>
             </tr>
+            <tr th:each="article : ${articleList}">
+                <th scope="row">1</th>
+                <td th:text="${article.getTitle()}">안녕하세요</td>
+                <td>김민성</td>
+                <td>2001.03.14</td>
+            </tr>
             </tbody>
         </table>
     </div>
