@@ -5,6 +5,10 @@
     <title>Title</title>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Quill Css-->
+    <link rel="stylesheet" href="/node_modules/quill/dist/quill.snow.css">
+
 </head>
 <body>
 
@@ -22,7 +26,10 @@
             </div>
             <div class="mb-3">
                 <label for="inputContent" class="form-label">내용</label>
-                <textarea class="form-control" id="inputContent" name="content"></textarea>
+                <div id="inputContent" style="height: 375px"></div>
+                <input type="hidden" id="quill_html" name="content">
+
+<!--                <textarea class="form-control" id="inputContent" name="content"></textarea>-->
                 <div id="contentHelp" class="form-text">게시글 내용을 적어주세요.</div>
             </div>
             <div class="d-grid">
@@ -31,6 +38,25 @@
         </form>
     </div>
 </section>
+
+<script src="/node_modules/quill/dist/quill.min.js"></script>
+
+<script>
+    var quill = new Quill('#inputContent', {
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                ['image', 'code-block']
+            ]
+        },
+        placeholder: 'Compose an epic...',
+        theme: 'snow'  // or 'bubble'
+    });
+    quill.on('text-change', () => {
+        document.getElementById("quill_html").value = quill.root.innerHTML
+    })
+</script>
 
 
 </body>

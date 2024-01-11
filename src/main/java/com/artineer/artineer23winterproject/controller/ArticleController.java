@@ -35,8 +35,8 @@ public class ArticleController {
     public String showArticles(Model model, PageDto pageDto) {
 
 
-        // page 번호는 0번부터
-        // pageDto.getPage()의 값은 1이 기본값이기때문에 -1
+        /* page 번호는 0번부터 */
+        /* pageDto.getPage()의 값은 1이 기본값이기때문에 -1 */
         Pageable pageable = PageRequest.of(
                 pageDto.getPage() - 1,
                 // 가져올 데이터양 기본 10으로 설정
@@ -44,18 +44,23 @@ public class ArticleController {
                 // 정렬기준은 "id"컬럼이며 내림차순으로 정렬
                 Sort.by("id").descending());
 
-        // 만든 Pageable 객체를 finAll 할때 파라미터로 넣으면 Page 로 감싸진 entity 가 나온다
-        Page<Article> articles = articleRepository.findAll(pageable);
+        /* 만든 Pageable 객체를 finAll 할때 파라미터로 넣으면 Page 로 감싸진 entity 가 나온다 */
+        Page<Article> all = articleRepository.findAll(pageable);
 
-//        List<Article> articles = all.getContent();
+        /* Page 로 감사진 entity 를 꺼냄 */
+        List<Article> articles = all.getContent();
 
+
+        /* paging 처리에 필요한 값들을 초기화 필요값 (현재페이지, 가져올페이지갯수, 총데이터갯수) */
         ArticleResponseDto articleResponseDto = ArticleResponseDto.builder()
                 .pageDto(pageDto)
                 .total(articleRepository.count())
                 .build();
 
 
+        /* paging 알고리즘 처리된 dto 를 모델에 등록 */
         model.addAttribute("dto", articleResponseDto);
+        /* entity 를 모델에 등록 */
         model.addAttribute("articleList", articles);
 
         return "article/articles";

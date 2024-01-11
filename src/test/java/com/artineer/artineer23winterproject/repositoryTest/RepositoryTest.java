@@ -10,21 +10,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class RepositoryTest {
-
     @Autowired
     ArticleRepository articleRepository;
+
     @Test
     public void insertData() {
 
         for (int i = 0; i <100 ; i++) {
+            // 객체를 만들어서
             Article article = Article.builder()
                     .title("title" + i)
                     .content("content" + i)
                     .build();
 
+            // 저장
             articleRepository.save(article);
         }
-
 
     }
 }

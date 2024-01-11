@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="/node_modules/jquery/dist/jquery.min.js" defer></script>
+
+    <!-- Quill Css-->
+    <link rel="stylesheet" href="/node_modules/quill/dist/quill.bubble.css">
+
 </head>
 <body>
 
@@ -17,7 +21,7 @@
 
 <!-- Content -->
 <section th:object="${article}" class="container">
-    <div  class="mt-5 d-flex justify-content-center flex-column  ">
+    <div class="mt-5 d-flex justify-content-center flex-column  ">
         <div class="shadow border-opacity-25 rounded p-5">
             <div class="mt-2">
                 <h2 class="text-break">제목</h2>
@@ -26,7 +30,10 @@
 
             <div class="mt-4">
                 <h2>내용</h2>
-                <p th:text="*{content}"></p>
+                <!--                <p th:text="*{content}"></p>-->
+                <div id="article-content">
+                    <div th:utext="*{content}"></div>
+                </div>
             </div>
         </div>
 
@@ -43,7 +50,13 @@
     </div>
 </section>
 
-
+<script src="/node_modules/quill/dist/quill.min.js"></script>
+<script>
+    var quill = new Quill('#article-content', {
+        theme: 'bubble',
+        readOnly: true
+    });
+</script>
 
 
 </body>

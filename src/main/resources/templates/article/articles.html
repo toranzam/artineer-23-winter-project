@@ -33,21 +33,23 @@
             <tbody>
             <tr th:each="article : ${articleList}">
                 <th scope="row" th:text="${article.id}">1</th>
-                <td ><a th:text="${article.getTitle()}" th:href="@{/articles/{id}(id = ${article.id})}"></a></td>
+                <td><a th:text="${article.title}" th:href="@{/articles/{id}(id = ${article.id})}"></a></td>
                 <td>김민성</td>
                 <td>2001.03.14</td>
             </tr>
             </tbody>
         </table>
         <div class="d-flex justify-content-center  mt-5">
-            <nav >
+            <nav>
                 <ul class="pagination">
                     <li class="page-item"><a class="page-link"
                                              th:if="${dto.prev}"
                                              th:href="@{/articles(page=${dto.prevPage})}">이전</a></li>
                     <li class="page-item" th:each="number : ${dto.pageNumList}"><a class="page-link"
-                                             th:text="${number}"
-                                             th:href="@{/articles(page=${number}, size=10)}">1</a></li>
+                                                                                   th:classappend="${dto.pageDto.page eq number} ? active"
+                                                                                   th:text="${number}"
+                                                                                   th:href="@{/articles(page=${number}, size=10)}">1</a>
+                    </li>
                     <li class="page-item"><a class="page-link"
                                              th:if="${dto.next}"
                                              th:href="@{/articles(page=${dto.nextPage})}">다음</a></li>
@@ -56,7 +58,6 @@
         </div>
     </div>
 </section>
-
 
 
 </body>
