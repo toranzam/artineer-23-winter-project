@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,12 +74,14 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public String createArticle(ArticleDto articleDto) {
+    public String createArticle(ArticleDto articleDto, Principal principal) {
         System.out.println("articleDto = " + articleDto);
 
         Article article = Article.builder()
                 .title(articleDto.getTitle())
                 .content(articleDto.getContent())
+                .author(principal.getName())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         articleRepository.save(article);

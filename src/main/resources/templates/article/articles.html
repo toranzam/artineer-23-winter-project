@@ -34,8 +34,8 @@
             <tr th:each="article : ${articleList}">
                 <th scope="row" th:text="${article.id}">1</th>
                 <td><a th:text="${article.title}" th:href="@{/articles/{id}(id = ${article.id})}"></a></td>
-                <td>김민성</td>
-                <td>2001.03.14</td>
+                <td th:text="${article.author}"></td>
+                <td th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></td>
             </tr>
             </tbody>
         </table>

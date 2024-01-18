@@ -4,6 +4,8 @@ package com.artineer.artineer23winterproject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +24,9 @@ public class Article {
 
     @Lob
     private String content;
+
+    private String author;
+
+    private LocalDateTime createdAt;
 
 }
