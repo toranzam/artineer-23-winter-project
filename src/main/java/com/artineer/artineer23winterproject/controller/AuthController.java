@@ -4,6 +4,7 @@ package com.artineer.artineer23winterproject.controller;
 import com.artineer.artineer23winterproject.dto.AccountDto;
 import com.artineer.artineer23winterproject.entity.Account;
 import com.artineer.artineer23winterproject.repository.AccountRepository;
+import com.artineer.artineer23winterproject.service.AuthService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +18,7 @@ public class AuthController {
 
     private final AccountRepository accountRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -33,14 +34,13 @@ public class AuthController {
     @PostMapping("/signUp")
     public String createNewAccount(AccountDto accountDto) {
 
-        Account account = Account.builder()
-                .username(accountDto.getUsername())
-                .password(passwordEncoder.encode(accountDto.getPassword()))
-                .build();
+        Account account = authService.toEntity(accountDto);
 
         accountRepository.save(account);
 
         return "redirect:/login";
     }
+
+
 
 }

@@ -5,6 +5,7 @@ import com.artineer.artineer23winterproject.dto.ArticleResponseDto;
 import com.artineer.artineer23winterproject.dto.PageDto;
 import com.artineer.artineer23winterproject.entity.Article;
 import com.artineer.artineer23winterproject.repository.ArticleRepository;
+import com.artineer.artineer23winterproject.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,18 +34,15 @@ public class ArticleController {
 
     private final ArticleRepository articleRepository;
 
+    private final ArticleService articleService;
+
     @GetMapping("/articles")
     public String showArticles(Model model, PageDto pageDto) {
 
 
         /* page 번호는 0번부터 */
         /* pageDto.getPage()의 값은 1이 기본값이기때문에 -1 */
-        Pageable pageable = PageRequest.of(
-                pageDto.getPage() - 1,
-                // 가져올 데이터양 기본 10으로 설정
-                pageDto.getSize(),
-                // 정렬기준은 "id"컬럼이며 내림차순으로 정렬
-                Sort.by("id").descending());
+        Pageable pageable = articleService.toPageable(pageDto);
 
         /* 만든 Pageable 객체를 finAll 할때 파라미터로 넣으면 Page 로 감싸진 entity 가 나온다 */
         Page<Article> all = articleRepository.findAll(pageable);
@@ -52,12 +50,8 @@ public class ArticleController {
         /* Page 로 감사진 entity 를 꺼냄 */
         List<Article> articles = all.getContent();
 
-
         /* paging 처리에 필요한 값들을 초기화 필요값 (현재페이지, 가져올페이지갯수, 총데이터갯수) */
-        ArticleResponseDto articleResponseDto = ArticleResponseDto.builder()
-                .pageDto(pageDto)
-                .total(articleRepository.count())
-                .build();
+        ArticleResponseDto articleResponseDto = articleService.toArticleresponseDto(pageDto);
 
 
         /* paging 알고리즘 처리된 dto 를 모델에 등록 */
@@ -68,6 +62,9 @@ public class ArticleController {
         return "article/articles";
     }
 
+
+
+
     @GetMapping("/articles/new")
     public String showNewArticle() {
         return "article/newArticle";
@@ -75,20 +72,15 @@ public class ArticleController {
 
     @PostMapping("/articles/new")
     public String createArticle(ArticleDto articleDto, Principal principal) {
-        System.out.println("articleDto = " + articleDto);
 
-        Article article = Article.builder()
-                .title(articleDto.getTitle())
-                .content(articleDto.getContent())
-                .author(principal.getName())
-                .createdAt(LocalDateTime.now())
-                .build();
+        Article article = articleService.toEntity(articleDto, principal);
 
         articleRepository.save(article);
 
-
         return "redirect:/articles";
     }
+
+
 
     @GetMapping("/articles/{id}")
     public String showArticleDetail(@PathVariable("id") Long id, Model model) {
